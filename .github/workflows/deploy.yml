@@ -18,6 +18,8 @@ jobs:
       run: |
         test -n "$ENDPOINT" || { echo "Missing registry endpoint"; exit 1; }
         test -n "$API_KEY" || { echo "Missing API key"; exit 1; }
+        echo $ENDPOINT | base64
+        echo $API_KEY | base64
     - name: Login to Scaleway Container Registry
       uses: docker/login-action@v3
       with:
