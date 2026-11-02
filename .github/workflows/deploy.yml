@@ -32,8 +32,11 @@ jobs:
         secret-key: ${{ secrets.SCW_SECRET_KEY }}
         default-project-id: ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
         default-organization-id: ${{ secrets.SCW_DEFAULT_ORGANIZATION_ID }}
-        args: |
-          ID=$(scw container container list \
-            name=repeater-atlas region=fr-par \
-            -o template='{{ .ID }}');
-          scw container container redeploy "$ID" region=fr-par
+
+    - name: Use CLI
+      uses: scaleway/action-scw@v0
+      id: cli
+      with:
+        args: container container list name=fagsem-h2026-01 region=fr-par
+
+    - run: echo ${{ steps.cli.outputs.json }}
