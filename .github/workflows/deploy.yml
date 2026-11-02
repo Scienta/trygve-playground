@@ -17,10 +17,10 @@ jobs:
         username: nologin
         password: "${{ secrets.SCW_SECRET_KEY }}"
         registry: "${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}"
-    - name: Build the Docker image
-      run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/fagsem-h2026:latest
-    - name: Push the Docker Image
-      run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/fagsem-h2026:latest
+#    - name: Build the Docker image
+#      run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/fagsem-h2026:latest
+#    - name: Push the Docker Image
+#      run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/fagsem-h2026:latest
 
     - name: Configure Scaleway CLI
       uses: scaleway/action-scw@v0
@@ -35,8 +35,15 @@ jobs:
 
     - name: Use CLI
       uses: scaleway/action-scw@v0
+      id: info
+      with:
+        args: info
+
+    - name: Use CLI
+      uses: scaleway/action-scw@v0
       id: cli
       with:
         args: container container list
 
-    - run: echo ${{ steps.cli.outputs.json }}
+    - run: echo info ${{ steps.info.outputs.json }}
+    - run: echo cli ${{ steps.cli.outputs.json }}
