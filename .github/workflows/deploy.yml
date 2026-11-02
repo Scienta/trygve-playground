@@ -37,6 +37,6 @@ jobs:
       uses: scaleway/action-scw@v0
       id: cli
       with:
-        args: container container list name=fagsem-h2026-01 region=fr-par
+        args: container container list
 
     - run: echo ${{ steps.cli.outputs.json }}
