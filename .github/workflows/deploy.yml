@@ -21,3 +21,19 @@ jobs:
       run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/fagsem-h2026:latest
     - name: Push the Docker Image
       run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/fagsem-h2026:latest
+
+    - name: Configure Scaleway CLI
+      uses: scaleway/action-scw@v0
+      with:
+        save-config: true
+        export-config: true
+        version: v2.65.2
+        access-key: ${{ secrets.SCW_ACCESS_KEY }}
+        secret-key: ${{ secrets.SCW_SECRET_KEY }}
+        default-project-id: ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
+        default-organization-id: ${{ secrets.SCW_DEFAULT_ORGANIZATION_ID }}
+        args: |
+          ID=$(scw container container list \
+            name=repeater-atlas region=fr-par \
+            -o template='{{ .ID }}');
+          scw container container redeploy "$ID" region=fr-par
