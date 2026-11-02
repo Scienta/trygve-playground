@@ -2,6 +2,7 @@ name: Build & Deploy to Scaleway
 
 env:
   namespace_name: fagsem-h2026-01
+  container_name: fagsem-h2026-01
 
 on:
   workflow_dispatch:
@@ -43,7 +44,7 @@ jobs:
         args: container namespace list name=${{ env.namespace_name }} region=fr-par
     
     - run: "echo Namespace: ${{ steps.namespace.outputs.json }}"
-    - run: "echo Namespace: ${{ steps.namespace.outputs.json[0].id }}"
+    - run: "echo Namespace: ${{ fromJSON(steps.namespace.outputs.json)[0].id }}"
     - run: "echo Namespace: ${{ join(fromJSON(steps.namespace.outputs.json).*.id, ',') }}"
 
     - name: Find container
@@ -53,11 +54,11 @@ jobs:
         args: >-
           container container list
           namespace-id=${{ join(fromJSON(steps.namespace.outputs.json).*.id, ',') }}
-          name=repeater-atlas
+          name=${{ env.container_name }}
           region=fr-par
     
     - run: "echo Container: ${{ steps.container.outputs.json }}"
-    - run: "echo Container: ${{ steps.container.outputs.json[0].id }}"
+    - run: "echo Container: ${{ fromJson(steps.container.outputs.json)[0].id }}"
     - run: "echo Container: ${{ join(fromJSON(steps.container.outputs.json).*.id, ',') }}"
 
     - name: Redeploy
