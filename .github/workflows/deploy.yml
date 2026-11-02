@@ -1,5 +1,8 @@
 name: Build & Deploy to Scaleway
 
+env:
+  namespace_name: fagsem-h2026-01
+
 on:
   workflow_dispatch:
   push:
@@ -33,17 +36,30 @@ jobs:
         default-project-id: ${{ secrets.SCW_DEFAULT_PROJECT_ID }}
         default-organization-id: ${{ secrets.SCW_DEFAULT_ORGANIZATION_ID }}
 
-    - name: Use CLI
+    - name: Find namespace
+      id: namespace
       uses: scaleway/action-scw@v0
-      id: info
       with:
-        args: info
+        args: container namespace list name=${{ env.namespace_name }} region=fr-par
+    
+    - run: "echo Namespace: ${{ steps.namespace.outputs.json }}"
 
-    - name: Use CLI
+    - name: Find container
+      id: container
       uses: scaleway/action-scw@v0
-      id: cli
       with:
-        args: container container list
+        args: >-
+          container container list
+          namespace-id=${{ join(fromJSON(steps.namespace.outputs.json).*.id, ',') }}
+          name=repeater-atlas
+          region=fr-par
+    
+    - run: "echo Container: ${{ steps.container.outputs.json }}"
 
-    - run: echo info ${{ steps.info.outputs.json }}
-    - run: echo cli ${{ steps.cli.outputs.json }}
+    - name: Redeploy
+      uses: scaleway/action-scw@v0
+      with:
+        args: >-
+          container container redeploy
+          ${{ join(fromJSON(steps.container.outputs.json).*.id, ',') }}
+          region=fr-par
