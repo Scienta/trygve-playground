@@ -43,6 +43,8 @@ jobs:
         args: container namespace list name=${{ env.namespace_name }} region=fr-par
     
     - run: "echo Namespace: ${{ steps.namespace.outputs.json }}"
+    - run: "echo Namespace: ${{ steps.namespace.outputs.json[0].id }}"
+    - run: "echo Namespace: ${{ join(fromJSON(steps.namespace.outputs.json).*.id, ',') }}"
 
     - name: Find container
       id: container
@@ -55,6 +57,8 @@ jobs:
           region=fr-par
     
     - run: "echo Container: ${{ steps.container.outputs.json }}"
+    - run: "echo Container: ${{ steps.container.outputs.json[0].id }}"
+    - run: "echo Container: ${{ join(fromJSON(steps.container.outputs.json).*.id, ',') }}"
 
     - name: Redeploy
       uses: scaleway/action-scw@v0
