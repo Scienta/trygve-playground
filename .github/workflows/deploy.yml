@@ -43,8 +43,8 @@ jobs:
       with:
         args: container namespace list name=${{ env.namespace_name }} region=fr-par
     
-    - run: "echo Namespace: ${{ steps.namespace.outputs.json }}"
-    - run: "echo Namespace: ${{ fromJSON(steps.namespace.outputs.json)[0].id }}"
+#    - run: "echo Namespace: ${{ steps.namespace.outputs.json }}"
+#    - run: "echo Namespace: ${{ fromJSON(steps.namespace.outputs.json)[0].id }}"
     - run: "echo Namespace: ${{ join(fromJSON(steps.namespace.outputs.json).*.id, ',') }}"
 
     - name: Find container
@@ -57,8 +57,8 @@ jobs:
           name=${{ env.container_name }}
           region=fr-par
     
-    - run: "echo Container: ${{ steps.container.outputs.json }}"
-    - run: "echo Container: ${{ fromJson(steps.container.outputs.json)[0].id }}"
+#    - run: "echo Container: ${{ steps.container.outputs.json }}"
+#    - run: "echo Container: ${{ fromJson(steps.container.outputs.json)[0].id }}"
     - run: "echo Container: ${{ join(fromJSON(steps.container.outputs.json).*.id, ',') }}"
 
     - name: Redeploy
